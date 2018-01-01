@@ -1,0 +1,13 @@
+<div *ngIf="richMenu">
+  <p>richMenuId: {{richMenu.richMenuId}}</p>
+  <p>name: {{richMenu.name}}</p>
+  <p>chatBarText: {{richMenu.chatBarText}}</p>
+  <div *ngFor="let area of richMenu.areas">
+    <p>x:{{area.bounds.x}} y:{{area.bounds.y}} width:{{area.bounds.width}} height:{{area.bounds.height}}</p>
+    <p>type:{{area.action.type}} text:{{area.action.text}}</p>
+  </div>
+  
+<div>
+  <button (click)="delete()">delete1</button>
+</div>
+</div>

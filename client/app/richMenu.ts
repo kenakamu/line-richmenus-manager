@@ -6,6 +6,13 @@ export class richMenu {
     chatBarText: string;
     areas: area[];
     image: string;
+    /**
+     *
+     */
+    constructor() {
+        this.size = new size();
+        this.areas = new Array<area>();        
+    }
 }
 
 export class size {

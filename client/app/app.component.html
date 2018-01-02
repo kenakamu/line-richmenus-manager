@@ -1,3 +1,38 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<app-settings></app-settings>
-<app-richmenulist></app-richmenulist>
+<div>
+    <button igxButton="raised" (click)="openSettings()">Settings</button>
+    <button igxButton="raised" (click)="loadRichMenu()">Load Rich Menus</button>
+    <button igxButton="raised" (click)="newRichMenu()">New Rich Menu</button>
+</div>
+<div class="col-md-2">
+    <app-richmenulist [loadRichMenus]="loadRichMenus" 
+        (emitSelectedRichmenu)="emitSelectedRichmenu($event)" 
+        (emitNew)="emitNew($event)"
+        (emitloadedRichMenus)="emitloadedRichMenus($event)"
+        (emitAuthenticationError)="emitAuthenticationError($event)"></app-richmenulist>
+</div>
+<div class="col-md-10">
+    <app-richmenudetail [richMenu]="selectedRichMenu"></app-richmenudetail>
+</div>
+<div class="col-md-10">
+    <app-richmenueditor [displayNew]="displayNew" (emitClose)="emitClose($event)"></app-richmenueditor>
+</div>
+<div class="col-md-12">
+    <app-richmenulink></app-richmenulink>
+</div>
+
+<igx-dialog #settings title="SignIn" leftButtonLabel="OK" (onLeftButtonSelect)="closeSettings()">
+    <div class="igx-form-group">
+        <input igxInput type="password" [(ngModel)]="token" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+        />
+        <label igxLabel class="igx-form-group__label">Channel Access Token</label>
+    </div>
+    <div class="igx-form-group">
+        <input igxInput type="text" [(ngModel)]="userId" class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+        />
+        <label igxLabel class="igx-form-group__label">User Id</label>
+    </div>
+</igx-dialog>
+
+<igx-dialog #alert title="Alert" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+</igx-dialog>

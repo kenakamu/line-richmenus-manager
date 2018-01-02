@@ -1,1 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+    background-color: rgb(222,222,222);
+    padding-left:20px;
+    padding-right:20px;
+}
+
+.igx-dialog__window{
+    width:800px !important;
+    min-width: 800px !important;
+    max-width: 800px !important;
+}

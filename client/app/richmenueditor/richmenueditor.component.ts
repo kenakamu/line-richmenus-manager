@@ -1,9 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { richMenu, bounds, action, area, size, postbackAction, messageAction, uriAction } from '../richMenu';
 import { LineService } from '../line.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser'
-import { MessageService } from '../message.service';
+import { IgxDialog } from 'igniteui-js-blocks/main';
 
 @Component({
   selector: 'app-richmenueditor',
@@ -13,10 +11,11 @@ import { MessageService } from '../message.service';
 export class RichmenueditorComponent implements OnInit {
 
   @ViewChild('canvas') canvas: ElementRef;
-
+  @ViewChild('alert') alert: IgxDialog;
+  @ViewChild('img') img: ElementRef
+  @Input() displayNew: boolean = false;
+  @Output() emitClose = new EventEmitter();
   constructor(
-    private http: HttpClient,
-    public messageService: MessageService,
     private lineService: LineService
   ) { }
 
@@ -27,23 +26,22 @@ export class RichmenueditorComponent implements OnInit {
   text: string = "";
   data: string = "";
   uri: string = "";
-  imagePath: string = "";
   imageType: string = "";
   imageData: string = "";
   ctx: CanvasRenderingContext2D;
+  rect: ClientRect;
   drawing: boolean = false;
   newRect: boolean = true;
   actionTypes: string[] = ["message", "postback", "uri"];
-  richMenuId: string = "";
 
   ngOnInit() {
-    this.richMenu.size = new size();
-    this.richMenu.areas = new Array<area>();
-    this.ctx = this.canvas.nativeElement.getContext('2d');
   }
 
-  loadImage(input: HTMLInputElement, img: HTMLImageElement) {
+  loadImage(input: HTMLInputElement) {
     if (!input.value && (input.value.split('.')[1].toLowerCase() !== 'png' || 'jpg' || 'jpeg')) {
+      input.value = this.imageData = "";
+      this.alert.message = "Only png or jpeg are supported.";
+      this.alert.open();
       return;
     }
 
@@ -53,18 +51,51 @@ export class RichmenueditorComponent implements OnInit {
     else {
       this.imageType = "image/jpeg";
     }
+
     var reader = new FileReader();
     // Callback when file read.
-    reader.onload = (event: ProgressEvent) => {
+    reader.onload = () => {
       input.value = "";
       this.imageData = reader.result;
-      img.src = this.imageData;
-    };
+      this.img.nativeElement.src = this.imageData;
+    }
 
     reader.readAsDataURL(input.files[0]);
   }
 
+  checkImage() {
+    if (this.img.nativeElement.src && this.img.nativeElement.naturalWidth === 2500 && (this.img.nativeElement.naturalHeight === 1686 || 843)) {
+      this.richMenu.size.width = this.img.nativeElement.naturalWidth;
+      this.richMenu.size.height = this.img.nativeElement.naturalHeight;
+      this.canvas.nativeElement.style.backgroundImage = `url('${this.imageData}')`;
+      this.canvas.nativeElement.width = this.img.nativeElement.naturalWidth / 4;
+      this.canvas.nativeElement.height = this.img.nativeElement.naturalHeight / 4;
+      this.ctx = this.canvas.nativeElement.getContext('2d');
+      this.rect = this.canvas.nativeElement.getBoundingClientRect()
+    }
+    else {
+      this.img.nativeElement.src = this.imageData = "";
+      this.alert.message = "Image size should be 2500x1686px or 2500x843px";
+      this.alert.open();
+    }
+  }
+
   addArea() {
+    if (this.bounds.width == null || 0) {
+      this.alert.message = "Use mouse to specify area in the image first.";
+      this.alert.open();
+      return;
+    }
+    if (this.label === "") {
+      this.alert.message = "Label is mandatory";
+      this.alert.open();
+      return;
+    }
+    if (this.richMenu.areas.length === 20) {
+      this.alert.message = "You cannot add more than 20 areas.";
+      this.alert.open();
+      return;
+    }
     let newArea = new area();
     Object.assign(newArea.bounds = new bounds(), this.bounds);
     if (this.actionType === "postback") {
@@ -98,47 +129,50 @@ export class RichmenueditorComponent implements OnInit {
   }
 
   createRichMenu() {
+    if (!this.richMenu.name || /^\s*$/.test(this.richMenu.name)) {
+      this.alert.message = "Name is mandatory";
+      this.alert.open();
+      return;
+    }
+    if (!this.richMenu.chatBarText || /^\s*$/.test(this.richMenu.chatBarText)) {
+      this.alert.message = "ChatBar Text is mandatory";
+      this.alert.open();
+      return;
+    }
     this.lineService.createRichMenu(this.richMenu)
       .subscribe(data => {
         this.lineService.uploadRichMenuImage(data, this.imageData, this.imageType)
-          .subscribe();
+          .subscribe(() => {
+            this.emitClose.emit(true);
+          });
       });
   }
 
-  uploadImage() {
-    this.lineService.uploadRichMenuImage(this.richMenuId, this.imageData, this.imageType)
-    .subscribe();
+  cancel(){
+    this.emitClose.emit(true);
   }
 
-  checkImage(img: HTMLImageElement, canvas: HTMLCanvasElement) {
-    if (img.src && img.naturalWidth === 2500 && (img.naturalHeight === 1686 || 843)) {
-      this.richMenu.size.width = img.naturalWidth;
-      this.richMenu.size.height = img.naturalHeight;
-      let index = this.messageService.messages.findIndex(x => x === "Image size should be 2500x1686px or 2500x843px");
-      this.messageService.messages.splice(index, 1);
-      canvas.style.backgroundImage = `url('${this.imageData}')`;
-      canvas.width = img.naturalWidth / 4;
-      canvas.height = img.naturalHeight / 4;
-    }
-    else {
-      this.messageService.add("Image size should be 2500x1686px or 2500x843px");
-      img.src = this.imageData = null;
-    }
+  resetAndClose(){
+    this.emitClose.emit(true);
   }
 
   keepDrawing(evt) {
     if (!this.drawing) {
       return;
     }
-    var rect = this.canvas.nativeElement.getBoundingClientRect();
-    this.bounds.width = evt.clientX - rect.left - this.bounds.x;
-    this.bounds.height = evt.clientY - rect.top - this.bounds.y;
-    this.ctx.clearRect(0, 0, rect.width, rect.height);
+    this.bounds.width = evt.clientX - Math.floor(this.rect.left) - this.bounds.x;
+    this.bounds.height = evt.clientY - Math.floor(this.rect.top) - this.bounds.y;
+    this.ctx.clearRect(0, 0, this.rect.width, this.rect.height);
     this.ctx.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.drawAllRect();
   }
 
   startDrawing(evt) {
+    if (this.imageData === "") {
+      this.alert.message = "Select image first.";
+      this.alert.open();
+      return;
+    }
     if (this.newRect) {
       this.ctx.beginPath();
       this.newRect = false;
@@ -147,16 +181,17 @@ export class RichmenueditorComponent implements OnInit {
       this.ctx.textBaseline = "middle";
       this.ctx.fillStyle = "rgba(255,255,255,0.7)";
     }
-    var rect = this.canvas.nativeElement.getBoundingClientRect();
-    this.bounds.x = evt.clientX - rect.left;
-    this.bounds.y = evt.clientY - rect.top;
+    this.bounds.x = evt.clientX - Math.floor(this.rect.left);
+    this.bounds.y = evt.clientY - Math.floor(this.rect.top);
     this.drawing = true;
   }
 
   stopDrawing(evt) {
-    var rect = this.canvas.nativeElement.getBoundingClientRect();
-    this.bounds.width = evt.clientX - rect.left - this.bounds.x;
-    this.bounds.height = evt.clientY - rect.top - this.bounds.y;
+    if (!this.newRect) {
+      return;
+    }
+    this.bounds.width = evt.clientX - Math.floor(this.rect.left) - this.bounds.x;
+    this.bounds.height = evt.clientY - Math.floor(this.rect.top) - this.bounds.y;
     if (this.bounds.width < 0) {
       this.bounds.x += this.bounds.width;
       this.bounds.width = this.bounds.width * -1;
@@ -185,8 +220,7 @@ export class RichmenueditorComponent implements OnInit {
     this.bounds.width = +this.bounds.width;
     this.bounds.height = +this.bounds.height;
 
-    var rect = this.canvas.nativeElement.getBoundingClientRect();
-    this.ctx.clearRect(0, 0, rect.width, rect.height);
+    this.ctx.clearRect(0, 0, this.rect.width, this.rect.height);
     this.ctx.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.ctx.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
     this.ctx.strokeText((this.richMenu.areas.length + 1).toString(), this.bounds.x + (this.bounds.width / 2), this.bounds.y + (this.bounds.height / 2));

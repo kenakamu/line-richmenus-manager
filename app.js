@@ -8,11 +8,11 @@ var request = require('request');
 var app = express();
 var http = require('http').Server(app);
 
-
 // Specifie body parsers
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 app.use(bodyParser.raw({ limit: '50mb', type: '*/*' }));
+
 // Return all static files such as css and js in public folder.
 app.use(express.static(path.join(__dirname, 'dist/public')));
 
@@ -30,52 +30,44 @@ app.delete('/*', function (req, res) {
 });
 
 app.post('/*', function (req, res) {
+    if (req.body != null) {
+        if (req.headers['content-type'] === 'application/json') {
+            req.body = JSON.stringify(req.body);
+        }
+        else if (req.method === "POST" && req.url.indexOf('content') > -1) {
+            req.body = Buffer.from(req.body.toString().split(',')[1], 'base64');
+        }
+        else if (req.headers['content-length'] === "0") {
+            req.body = null;
+        }
+    }
     handleRequest(req, res);
 });
 // Receive request from your bot application.
-app.all('/*', function (req, res) {
+app.get('/*', function (req, res) {
     handleRequest(req, res);
 });
 
 // Handle all request by add LINE Platform Url.
 function handleRequest(req, res) {
 
-    delete req.headers['host'];
-
-    if (req.body != null) {
-        if (req.headers['content-type'] === 'application/json') {
-            req.body = JSON.stringify(req.body);
-        }
-    }
-
-    // Craft URL for LINE Platform.
-    var url = req.url;
-    if (url.indexOf('oauth') > -1) {
-        url = url.slice(url.indexOf('oauth'), url.length);
-    }
-    else if (url.indexOf('bot') > -1) {
-        url = url.slice(url.indexOf('bot'), url.length);
-    }
+    let headers = {};
+    headers.authorization = req.headers.authorization;
+    headers['content-type'] = req.headers['content-type'];
 
     let requestSettings = {
-        headers: req.headers,
-        uri: `${lineAPIUrl}${url}`,
+        headers: headers,
+        uri: `${lineAPIUrl}${req.url}`,
         method: req.method
     };
 
     if (req.method === "POST") {
         requestSettings.body = req.body;
-        if (url.indexOf('content') > -1) {
-            requestSettings.headers = {};
-            requestSettings.headers.authorization = req.headers.authorization;
-            requestSettings.headers['content-type'] = req.headers['content-type']
-            requestSettings.body = Buffer.from(req.body.toString().split(',')[1], 'base64');
-            //requestSettings.headers['content-length'] = requestSettings.body.length;
-        }
     }
-    if (req.method === "GET" && url.indexOf('content') > -1) {
+    else if (req.method === "GET" && req.url.indexOf('content') > -1) {
         requestSettings.encoding = null;
     }
+
     request(requestSettings, function (error, response, body) {
         res.send(body);
     });

@@ -53,7 +53,7 @@ export class LineService {
  * @param userId 
  */
   getRichMenuIdOfUser(userId: string): Observable<string> {
-    return this.http.get<string>(userId + 'richmenu').pipe(
+    return this.http.get<string>(`user/${userId}/richmenu`).pipe(
       map(data => data['richMenuId']),
       catchError(this.handleError<string>(`get richMenu for user: ${userId}`))
     )
@@ -64,8 +64,8 @@ export class LineService {
    * @param userId 
    * @param richMenuId 
    */
-  linkRichMenuToUser(userId: string, richMenuId: string) {
-    this.http.post(`user/${userId}/richmenu/${richMenuId}`, null).pipe(
+  linkRichMenuToUser(userId: string, richMenuId: string): Observable<any> {
+    return this.http.post(`user/${userId}/richmenu/${richMenuId}`, null).pipe(
       catchError(this.handleError<string>(`link richMenu ${richMenuId} for user: ${userId}`))
     );
   }
@@ -74,8 +74,8 @@ export class LineService {
      * Unlink rich menu from user https://developers.line.me/en/docs/messaging-api/reference/#unlink-rich-menu-from-user
      * @param userId 
      */
-  unlinkRichMenuToUser(userId: string): void {
-    this.http.delete(`user/${userId}/richmenu`).pipe(
+  unlinkRichMenuToUser(userId: string): Observable<any> {
+    return this.http.delete(`user/${userId}/richmenu`).pipe(
       catchError(this.handleError(`unlink richMenu for user: ${userId}`))
     );
   }
@@ -85,13 +85,11 @@ export class LineService {
    * @param richMenuId  
    */
   downloadRichMenuImage(richMenuId: string): Observable<any> {
-    return this.http.get(`richmenu/${richMenuId}/content`,  { responseType: 'blob' }).pipe(
+    return this.http.get(`richmenu/${richMenuId}/content`, { responseType: 'blob' }).pipe(
       map(data => ({ "image": data, "richMenuId": richMenuId })),
       catchError(this.handleError<Blob>(`download image for richMenu ${richMenuId}`))
     );
   }
-
-  
 
   /**
    * Upload rich menu image https://developers.line.me/en/docs/messaging-api/reference/#upload-rich-menu-image
@@ -110,7 +108,14 @@ export class LineService {
    */
   getRichMenuList(): Observable<richMenu[]> {
     return this.http.get<richMenu[]>('richmenu/list').pipe(
-      map(data => data["richmenus"])
+      map((data) => {
+        if (data["message"]) {
+          throw data["message"];
+        }
+        else {
+          return data["richmenus"];
+        }
+      })
     );
   }
 

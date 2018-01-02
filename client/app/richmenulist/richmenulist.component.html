@@ -1,25 +1,6 @@
-<div>
-  <ul>
-    <li *ngFor="let richMenu of richMenus" [class.selected]="richMenu === selectedRichMenu" (click)="onSelect(richMenu)">
-      <p>{{richMenu.name}}</p>
-      <img width="400px" [src]="getImage(richMenu)">
-    </li>
-  </ul>
-</div>
-<div>
-  <button (click)="load()">load</button>
-</div>
-<div *ngIf="selectedRichMenu">
-  <p>richMenuId: {{selectedRichMenu.richMenuId}}</p>
-  <p>name: {{selectedRichMenu.name}}</p>
-  <p>chatBarText: {{selectedRichMenu.chatBarText}}</p>
-  <div *ngFor="let area of selectedRichMenu.areas">
-    <p>x:{{area.bounds.x}} y:{{area.bounds.y}} width:{{area.bounds.width}} height:{{area.bounds.height}}</p>
-    <p>type:{{area.action.type}} text:{{area.action.text}}</p>
-  </div>
-
-  <div>
-    <button (click)="delete(selectedRichMenu)">delete</button>
+<div>  
+  <div style="width:200px" *ngFor="let richMenu of richMenus" [class.selected]="richMenu === selectedRichMenu" (click)="onSelect(richMenu)">
+    Name: {{richMenu.name}}
+    <img width="200px" [src]="getImage(richMenu)">
   </div>
 </div>
-<app-richmenueditor></app-richmenueditor>

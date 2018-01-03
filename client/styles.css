@@ -3,10 +3,31 @@ body{
     background-color: rgb(222,222,222);
     padding-left:20px;
     padding-right:20px;
+    height: 100%;
+}
+
+html{
+    height: 100%;
 }
 
 .igx-dialog__window{
     width:800px !important;
     min-width: 800px !important;
     max-width: 800px !important;
+}
+
+::-webkit-scrollbar { 
+    width: 5px;   
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .1);
+   background-color:lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 50, 50, .5);
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .3);
 }

@@ -11,7 +11,7 @@ export class richMenu {
      */
     constructor() {
         this.size = new size();
-        this.areas = new Array<area>();        
+        this.areas = new Array<area>();
     }
 }
 
@@ -35,17 +35,36 @@ export class bounds {
 export abstract class action {
     type: string;
     label: string;
+    constructor(label: string) {
+        this.label = label;
+    }
 }
 
-export class postbackAction extends action{
+export class postbackAction extends action {
     data: string;
     text: string;
+    constructor(label: string, data: string, text: string) {
+        super(label);
+        this.type = "postback";
+        this.data = data;
+        this.text = text;
+    }
 }
 
-export class messageAction extends action{
+export class messageAction extends action {
     text: string;
+    constructor(label: string, text: string) {
+        super(label);
+        this.type = "message";
+        this.text = text;
+    }
 }
 
-export class uriAction extends action{
+export class uriAction extends action {
     uri: string;
+    constructor(label: string, uri: string) {
+        super(label);
+        this.type = "uri";
+        this.uri = uri;
+    }
 }

@@ -1,9 +1,23 @@
 .item {
     display: flex;
     align-items: center;
-    height:30px;
+    height: 30px;
 }
 
-select{
-    height:25px;
+.igxLayout {
+    margin: -10px 0;
+}
+
+.areas {
+    height: calc(100vh - 180px);
+}
+
+select {
+    height: 25px;
+    width: 80px;
+}
+
+.index{
+    font-size: 20px;
+    margin: 0 8px 0 0;
 }

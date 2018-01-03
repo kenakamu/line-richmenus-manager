@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LineService } from '../line.service';
 import { richMenu } from '../richMenu';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser'
@@ -10,13 +10,11 @@ import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
   templateUrl: './richmenulist.component.html',
   styleUrls: ['./richmenulist.component.css']
 })
-export class RichmenulistComponent implements OnInit, OnChanges {
+export class RichmenulistComponent implements OnInit {
 
-  @Input() loadRichMenus: boolean;
+  @Input() displayNew: boolean;
   @Output() emitSelectedRichmenu = new EventEmitter();
-  @Output() emitNew = new EventEmitter();
   @Output() emitAuthenticationError = new EventEmitter();
-  @Output() emitloadedRichMenus = new EventEmitter();
 
   constructor(
     private lineService: LineService,
@@ -29,25 +27,14 @@ export class RichmenulistComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  ngOnChanges(changes: {[propName: string]: SimpleChange}){
-    if(this.loadRichMenus){
-      this.load();
-    }
-  }
-
   load(): void {
     this.richMenus = new Array<richMenu>();
     this.lineService.getRichMenuList()
       .subscribe(data => { 
-        this.emitloadedRichMenus.emit();
         this.loadImages(data);      
       }, (err)=>{
         this.emitAuthenticationError.emit();
       })      
-  }
-
-  new(): void{
-    this.emitNew.emit(true);
   }
 
   loadImages(richMenus: richMenu[]) {

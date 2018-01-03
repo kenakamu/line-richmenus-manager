@@ -1,6 +1,6 @@
-<div>  
-  <div style="width:200px" *ngFor="let richMenu of richMenus" [class.selected]="richMenu === selectedRichMenu" (click)="onSelect(richMenu)">
+<div *ngIf="displayNew===false" class="richMenuList">
+  <div *ngFor="let richMenu of richMenus" [class.selected]="richMenu === selectedRichMenu" (click)="onSelect(richMenu)">
     Name: {{richMenu.name}}
-    <img width="200px" [src]="getImage(richMenu)">
+    <img width="95%" [src]="getImage(richMenu)">
   </div>
 </div>

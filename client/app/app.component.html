@@ -1,25 +1,25 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div>
-    <button igxButton="raised" (click)="openSettings()">Settings</button>
-    <button igxButton="raised" (click)="loadRichMenu()">Load Rich Menus</button>
-    <button igxButton="raised" (click)="newRichMenu()">New Rich Menu</button>
-</div>
-<div class="col-md-2">
-    <app-richmenulist [loadRichMenus]="loadRichMenus" 
-        (emitSelectedRichmenu)="emitSelectedRichmenu($event)" 
-        (emitNew)="emitNew($event)"
-        (emitloadedRichMenus)="emitloadedRichMenus($event)"
-        (emitAuthenticationError)="emitAuthenticationError($event)"></app-richmenulist>
-</div>
-<div class="col-md-10">
-    <app-richmenudetail [richMenu]="selectedRichMenu"></app-richmenudetail>
-</div>
-<div class="col-md-10">
-    <app-richmenueditor [displayNew]="displayNew" (emitClose)="emitClose($event)"></app-richmenueditor>
-</div>
-<div class="col-md-12">
+<igx-navbar title="LINE Rich Menu Manager">
+    <button igxButton="icon" (click)="loadRichMenu()">
+        <igx-icon name="refresh"></igx-icon>
+    </button>
+    <button igxButton="icon" (click)="newRichMenu()">
+        <igx-icon name="add"></igx-icon>
+    </button>
+    <button igxButton="icon" (click)="openSettings()">
+        <igx-icon name="settings"></igx-icon>
+    </button>
+</igx-navbar>
+
+<app-richmenulist class="col-md-2" [displayNew]="displayNew" (emitSelectedRichmenu)="emitSelectedRichmenu($event)" (emitAuthenticationError)="emitAuthenticationError($event)">
+</app-richmenulist>
+
+<app-richmenudetail class="col-md-10" [richMenu]="selectedRichMenu" [displayDetail]="!displayNew" (emitClose)="loadRichMenu()"></app-richmenudetail>
+
+<app-richmenueditor class="col-md-12" [displayNew]="displayNew" (emitClose)="loadRichMenu()"></app-richmenueditor>
+<!-- <div class="col-md-12">
     <app-richmenulink></app-richmenulink>
-</div>
+</div> -->
 
 <igx-dialog #settings title="SignIn" leftButtonLabel="OK" (onLeftButtonSelect)="closeSettings()">
     <div class="igx-form-group">
@@ -34,5 +34,5 @@
     </div>
 </igx-dialog>
 
-<igx-dialog #alert title="Alert" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+<igx-dialog #alert title="Authentication Failed" message="Please check your access token" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
 </igx-dialog>

@@ -10,7 +10,9 @@ import { HttpClientModule }    from '@angular/common/http';
 import { HttpModule }    from '@angular/http';
 import { HttpClient } from 'selenium-webdriver/http';
 
-import { IgxNavbarModule, IgxButtonModule, IgxIconModule, IgxLabelModule, IgxRadioModule ,IgxCardModule, IgxLayout, IgxListModule, IgxDialogModule } from 'igniteui-js-blocks/main';
+import { IgxNavbarModule, IgxButtonModule, IgxIconModule, IgxLabelModule, 
+  IgxRadioModule ,IgxCardModule, IgxLayout, IgxListModule, IgxDialogModule, 
+  IgxRippleModule } from 'igniteui-js-blocks/main';
 
 import { RichmenulistComponent } from './richmenulist/richmenulist.component';
 import { RichmenudetailComponent } from './richmenudetail/richmenudetail.component';
@@ -44,7 +46,8 @@ import { AuthService } from './auth.service';
     IgxCardModule,
     IgxLayout,
     IgxListModule,
-    IgxDialogModule
+    IgxDialogModule,
+    IgxRippleModule
   ],
   providers: [
     LineService,

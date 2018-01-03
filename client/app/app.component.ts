@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { richMenu } from './richMenu';
 import { IgxDialog } from 'igniteui-js-blocks/main';
+import { RichmenulistComponent } from './richmenulist/richmenulist.component';
+import { RichmenudetailComponent } from './richmenudetail/richmenudetail.component';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +14,11 @@ export class AppComponent implements OnInit {
 
   @ViewChild('settings') settings: IgxDialog;
   @ViewChild('alert') alert: IgxDialog;
+  @ViewChild(RichmenulistComponent) richmenulistComponent: RichmenulistComponent;
 
   title = 'LINE RichMenu Manager';
 
   selectedRichMenu: richMenu;
-  loadRichMenus: boolean;
   displayNew: boolean = false;
   userId: string;
   token: string;
@@ -28,7 +30,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.getItem('token')) {
-      this.loadRichMenus = true;
+      this.richmenulistComponent.load();
     }
     else {
       this.settings.open();
@@ -40,38 +42,26 @@ export class AppComponent implements OnInit {
       localStorage.setItem('userId', this.userId);
       localStorage.setItem('token', this.token);
       this.settings.close();
-      this.loadRichMenus = true;
+      this.richmenulistComponent.load();
     }
   }
 
-  emitSelectedRichmenu(e): void {
-    this.selectedRichMenu = e;
+  emitSelectedRichmenu(richMenu: richMenu): void {
+    this.selectedRichMenu = richMenu;
   }
 
   emitNew(e): void {
     this.displayNew = true;
   }
 
-  emitAuthenticationError(e):void{
-    this.loadRichMenus = false;    
-    this.alert.title ="Authentication Failed";
-    this.alert.message = "Please check your access token";
+  emitAuthenticationError(e): void {
     this.alert.open();
     this.settings.open();
   }
 
-  emitloadedRichMenus(e):void{
-    this.loadRichMenus = false;
-  }
-  
-  emitClose(e): void {
-    this.displayNew = false;
-    this.loadRichMenus = true;
-  }
-
   loadRichMenu(): void {
-    this.loadRichMenus = true;
-    
+    this.displayNew = false;
+    this.richmenulistComponent.load();
   }
 
   openSettings(): void {

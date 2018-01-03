@@ -1,12 +1,13 @@
 <div *ngIf="displayNew===true">
+  <!-- name, chatbar text, image -->
   <div class="layout-box">
     <div class="igx-form-group col-md-4">
-      <input [(ngModel)]="richMenu.name" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+      <input #nameInput [(ngModel)]="richMenu.name" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
       />
       <label igxLabel class="igx-form-group__label">Name</label>
     </div>
     <div class="igx-form-group col-md-4">
-      <input [(ngModel)]="richMenu.chatBarText" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+      <input #chatBarTextInput [(ngModel)]="richMenu.chatBarText" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
       />
       <label igxLabel class="igx-form-group__label">ChatBar Text</label>
     </div>
@@ -16,16 +17,17 @@
       <label igxLabel class="igx-form-group__label">Rich Menu Image</label>
     </div>
   </div>
-
-  <div class="col-md-8">
-    <canvas #canvas width="500px" height="0px" (mousemove)="keepDrawing($event)" (mousedown)="startDrawing($event)" (mouseup)="stopDrawing($event)"
-      style="background-size:contain;background-repeat:no-repeat"></canvas>
-    <img style="display:none" #img (load)="checkImage()">
-  </div>
-
-  <div *ngIf="imageData!==''">
+  <!-- canvas -->
   <div class="col-md-4">
-    <div class="layout-box" igxLayout igxLayoutDir="row">
+    <div #imgdiv style="width:100%">
+      <canvas #canvas (mousemove)="keepDrawing($event)" (mousedown)="startDrawing($event)" (mouseup)="stopDrawing($event)" style="background-size:contain;background-repeat:no-repeat;border-width:4px;border-style:solid;display:none"></canvas>
+      <img style="display:none" #img (load)="checkImage()">
+    </div>
+  </div>
+  <!-- Add Area Menu-->
+  <div *ngIf="imageType!==''" class="col-md-3">
+    <!-- bounds -->
+    <div class="igx-form-group igxLayout" igxLayout>
       <div class="igx-form-group" igxFlex>
         <input [(ngModel)]="bounds.x" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
           (input)="updateRect()" />
@@ -47,47 +49,50 @@
         <label igxLabel class="igx-form-group__label">height</label>
       </div>
     </div>
+    <!-- action -->
+    <div class="igx-form-group">
+      <select class="form-control" [(ngModel)]="actionType" required class="ng-untouched igx-form-group__input igx-form-group__input--filled">
+        <option *ngFor="let actionType of actionTypes" [selected]="actionType === actionType">{{actionType}}</option>
+      </select>
+      <label igxLabel class="igx-form-group__label">type</label>
+    </div>
+    <div class="igx-form-group">
+      <input [(ngModel)]="label" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+      />
+      <label igxLabel class="igx-form-group__label">label</label>
+    </div>
+    <div class="igx-form-group" *ngIf="actionType !== 'uri'">
+      <input [(ngModel)]="text" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+      />
+      <label igxLabel class="igx-form-group__label">text</label>
+    </div>
+    <div class="igx-form-group" *ngIf="actionType === 'uri'">
+      <input [(ngModel)]="uri" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+      />
+      <label igxLabel class="igx-form-group__label">uri</label>
+    </div>
+    <div class="igx-form-group" *ngIf="actionType === 'postback'">
+      <input [(ngModel)]="data" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+      />
+      <label igxLabel class="igx-form-group__label">data</label>
+    </div>
+    <!-- operations -->
+    <div>
+      <button igxButton="raised" igxRipple (click)="addArea()">add area</button>
+      <button igxButton="raised" igxRipple (click)="createRichMenu()">create richmenu</button>
+      <button igxButton="raised" igxRipple (click)="cancel()">cancel</button>
+    </div>
 
-    <div>
-      <div class="igx-form-group">
-        <select class="form-control" [(ngModel)]="actionType" required class="ng-untouched igx-form-group__input igx-form-group__input--filled">
-          <option *ngFor="let actionType of actionTypes" [selected]="actionType === actionType">{{actionType}}</option>
-        </select>
-        <label igxLabel class="igx-form-group__label">type</label>
-      </div>
-      <div class="igx-form-group">
-        <input [(ngModel)]="label" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
-        />
-        <label igxLabel class="igx-form-group__label">label</label>
-      </div>
-      <div class="igx-form-group" *ngIf="actionType !== 'uri'">
-        <input [(ngModel)]="text" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
-        />
-        <label igxLabel class="igx-form-group__label">text</label>
-      </div>
-      <div class="igx-form-group" *ngIf="actionType === 'uri'">
-        <input [(ngModel)]="uri" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
-        />
-        <label igxLabel class="igx-form-group__label">uri</label>
-      </div>
-      <div class="igx-form-group" *ngIf="actionType === 'postback'">
-        <input [(ngModel)]="data" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
-        />
-        <label igxLabel class="igx-form-group__label">data</label>
-      </div>
-    </div>
-    <div>
-      <button igxButton="raised" (click)="addArea()">add area</button>
-      <button igxButton="raised" (click)="createRichMenu()">create richmenu</button>
-      <button igxButton="raised" (click)="cancel()">cancel</button>
-    </div>
   </div>
-
-  <div class="col-md-12">
-    <igx-list>
-      <igx-list-item [isHeader]="true">Areas</igx-list-item>
-      <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let area of richMenu.areas">
+  <!-- Areas -->
+  <div *ngIf="imageType!==''" class="col-md-5 areas">
+    <igx-list #igxlist>
+      <igx-list-item [isHeader]="true">
+        <h4>Areas</h4>
+      </igx-list-item>
+      <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let area of richMenu.areas; let i = index;">
         <div class="item">
+          <div class="index">{{i + 1}} </div>
           <igx-icon name="delete" (click)="deleteArea(area)"></igx-icon>
           <div igxLayout igxLayoutDir="row">
             <div class="igx-form-group" igxFlex>
@@ -97,7 +102,7 @@
               <label igxLabel class="igx-form-group__label">type</label>
             </div>
             <div class="igx-form-group" igxFlex>
-              <input [(ngModel)]="area.action.label" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
+              <input #labelInput [(ngModel)]="area.action.label" igxInput type="text" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
               />
               <label igxLabel class="igx-form-group__label">label</label>
             </div>
@@ -122,7 +127,6 @@
     </igx-list>
   </div>
 </div>
-</div>
 
-<igx-dialog #alert title="Alert" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
+<igx-dialog #alert title="Alert" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="closeAlert()">
 </igx-dialog>

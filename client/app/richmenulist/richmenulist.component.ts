@@ -27,31 +27,50 @@ export class RichmenulistComponent implements OnInit {
   ngOnInit() {
   }
 
-  load(): void {
+  public load(userId: string): void {
     this.richMenus = new Array<richMenu>();
-    this.lineService.getRichMenuList()
-      .subscribe(data => { 
-        this.loadImages(data);      
-      }, (err)=>{
-        this.emitAuthenticationError.emit();
-      })      
+    if (userId) {
+      this.lineService.getRichMenuIdOfUser(userId).subscribe(
+        data => {
+          if (data) {
+            this.lineService.getRichMenu(data).subscribe(
+
+              data => {
+                this.loadImages(new Array<richMenu>(data));
+              }
+            );
+          }
+          else {
+            this.richMenus = new Array<richMenu>();
+          }
+        }
+      );
+    }
+    else {
+      this.lineService.getRichMenuList()
+        .subscribe(data => {
+          this.loadImages(data);
+        }, (err) => {
+          this.emitAuthenticationError.emit();
+        })
+    }
   }
 
-  loadImages(richMenus: richMenu[]) {
-    if(!richMenus){
+  private loadImages(richMenus: richMenu[]): void {
+    if (!richMenus) {
       return;
     }
     this.richMenus = richMenus;
     for (var i = 0; i < this.richMenus.length; i++) {
       this.lineService.downloadRichMenuImage(this.richMenus[i].richMenuId).subscribe(
-        data => { 
-          this.setImage(data); 
-        }        
+        data => {
+          this.setImage(data);
+        }
       );
     }
   }
 
-  setImage(data: any) {
+  public setImage(data: any): void {
     if (data.image.type === "application/octet-stream") {
       var reader = new FileReader();
       reader.onloadend = () => {
@@ -61,19 +80,19 @@ export class RichmenulistComponent implements OnInit {
     }
   }
 
-  getImage(richMenu: richMenu): SafeUrl {
+  public getImage(richMenu: richMenu): SafeUrl {
     if (richMenu.image != null) {
       return this.sanitizer.bypassSecurityTrustUrl(richMenu.image);
     }
   }
 
-  onSelect(richMenu: richMenu): void {
+  public onSelect(richMenu: richMenu): void {
     this.emitSelectedRichmenu.emit(richMenu);
   }
 
-  delete(richMenu: richMenu) {
+  public delete(richMenu: richMenu): void {
     this.lineService.deleteRichMenu(richMenu.richMenuId).subscribe(
-      () => { this.load(); }
+      () => { this.load(null); }
     );
   }
 }

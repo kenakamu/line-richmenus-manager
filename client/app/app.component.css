@@ -1,0 +1,7 @@
+igx-navbar input {
+    width: 300px;
+    display: none;
+    border-radius: 7px;
+    padding-left: 10px;
+    color: black !important;
+}

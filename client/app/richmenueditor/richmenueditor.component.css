@@ -1,7 +1,15 @@
 .item {
     display: flex;
     align-items: center;
-    height: 30px;
+    height: 40px;
+}
+
+canvas {
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-width: 4px;
+    border-style: solid;
+    display: none;
 }
 
 .igxLayout {
@@ -13,11 +21,47 @@
 }
 
 select {
-    height: 25px;
+    background-color: rgb(52,57,62);
+    border-width: 0 0 2px 0;
+    color: white;
+    height: 25px;    
+}
+
+select option {
+    color: black;
+    background-color: white;
+}
+.areas select {
     width: 80px;
 }
 
 .index{
     font-size: 20px;
     margin: 0 8px 0 0;
+}
+
+igx-list >>> .igx-list{
+    background: rgb(52,57,62) !important;
+    overflow-y: scroll !important;
+}
+
+igx-list-item {
+    margin-top: 25px;
+}
+
+igx-list-item >>> div{
+    background: rgb(52,57,62) !important;
+    color:white !important;
+}
+
+igx-list-item >>> label{
+    color:white !important;
+}
+
+.igx-form-group >>> label{
+    color:white !important;
+}
+
+.form-control{
+    padding: 0 !important;
 }

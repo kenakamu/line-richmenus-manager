@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { richMenu } from './richMenu';
 import { IgxDialog } from 'igniteui-js-blocks/main';
 import { RichmenulistComponent } from './richmenulist/richmenulist.component';
@@ -14,12 +14,14 @@ export class AppComponent implements OnInit {
 
   @ViewChild('settings') settings: IgxDialog;
   @ViewChild('alert') alert: IgxDialog;
+  @ViewChild('input') input: ElementRef;
   @ViewChild(RichmenulistComponent) richmenulistComponent: RichmenulistComponent;
 
   title = 'LINE RichMenu Manager';
 
   selectedRichMenu: richMenu;
   displayNew: boolean = false;
+  displayDetail: boolean = false;
   userId: string;
   token: string;
 
@@ -30,46 +32,57 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.getItem('token')) {
-      this.richmenulistComponent.load();
+      this.richmenulistComponent.load(null);
     }
     else {
       this.settings.open();
     }
   }
 
-  closeSettings() {
+  public closeSettings(): void {
     if (this.token) {
-      localStorage.setItem('userId', this.userId);
       localStorage.setItem('token', this.token);
       this.settings.close();
-      this.richmenulistComponent.load();
+      this.richmenulistComponent.load(null);
     }
   }
 
-  emitSelectedRichmenu(richMenu: richMenu): void {
+  public emitSelectedRichmenu(richMenu: richMenu): void {
+    this.displayDetail = true;
     this.selectedRichMenu = richMenu;
   }
 
-  emitNew(e): void {
+  public emitNew(e): void {
     this.displayNew = true;
   }
 
-  emitAuthenticationError(e): void {
+  public emitAuthenticationError(e): void {
     this.alert.open();
     this.settings.open();
   }
 
-  loadRichMenu(): void {
-    this.displayNew = false;
-    this.richmenulistComponent.load();
+  public searchRichMenuForUserId(e) {
+    if (e.keyCode === 13) {
+      this.input.nativeElement.style.display = "none";
+      if (!this.userId) {
+        return;
+      }
+      localStorage.setItem('userId', this.userId);
+      this.loadRichMenu(this.userId);
+    }
   }
 
-  openSettings(): void {
+  public loadRichMenu(userId: string): void {
+    this.displayNew = this.displayDetail = false;
+    this.richmenulistComponent.load(userId);
+  }
+
+  public openSettings(): void {
     this.settings.open();
   }
 
-  newRichMenu(): void {
-    this.displayNew = false;
+  public newRichMenu(): void {
+    this.displayDetail = false;
     this.displayNew = true;
   }
 }

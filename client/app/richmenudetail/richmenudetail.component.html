@@ -1,58 +1,64 @@
 <div *ngIf="richMenu && displayDetail">
   <div class="col-md-5">
-      <div class="igx-form-group">
-          <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{richMenu.richMenuId}}</label>
-    
-          <label igxLabel class="igx-form-group__label">RichMenu Id</label>
-        </div>
-        <div class="igx-form-group">
-          <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{richMenu.name}}</label>
-    
-          <label igxLabel class="igx-form-group__label">Name</label>
-        </div>
-        <div class="igx-form-group">
-          <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{richMenu.chatBarText}}</label>
-    
-          <label igxLabel class="igx-form-group__label">Chat Bar Text</label>
-        </div>
-    <canvas #canvas width="500px" height="0px" style="background-size:contain;background-repeat:no-repeat"></canvas>
+    <div class="igx-form-group">
+      <input type="text" igxInput [(ngModel)]="richMenu.richMenuId" readonly />
+      <label igxLabel>RichMenu Id</label>
+    </div>
+    <div class="igx-form-group">
+      <input type="text" igxInput [(ngModel)]="richMenu.name" readonly/>
+      <label igxLabel>Name</label>
+    </div>
+    <div class="igx-form-group">
+      <input type="text" igxInput [(ngModel)]="richMenu.chatBarText" readonly />
+      <label igxLabel>Chat Bar Text</label>
+    </div>
+    <canvas #canvas width="500px" height="0px"></canvas>
     <img style="display:none" #img (load)="checkImage()">
     <div>
-        <button igxButton="raised" (click)="delete()">Delete Rich Menu</button>
-      </div>
+      <button igxButton="raised" (click)="delete()">Delete Rich Menu</button>
+      <button igxButton="raised" (click)="linkToUser()">Link to User</button>
+      <button igxButton="raised" (click)="unlinkToUser()">Unlink from User</button>
+    </div>
   </div>
   <div class="col-md-7 areas">
-    <igx-list #igxlist>
-      <igx-list-item [isHeader]="true">Areas</igx-list-item>
-      <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let area of richMenu.areas; let i = index;">
+    <igx-list>
+      <igx-list-item [isHeader]="true">
+        <h5>Areas</h5>
+      </igx-list-item>
+      <igx-list-item *ngFor="let area of richMenu.areas; let i = index;">
         <div class="item">
           <div igxLayout igxLayoutDir="row">
             <div class="index">{{i + 1}} </div>
             <div class="igx-form-group type" igxFlex>
-              <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{area.action.type}}</label>
-              <label igxLabel class="igx-form-group__label">type</label>
+              <input type="text" igxInput [(ngModel)]="area.action.type" readonly />
+              <label igxLabel>type</label>
             </div>
             <div class="igx-form-group" igxFlex>
-              <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{area.action.label}}</label>
-              <label igxLabel class="igx-form-group__label">label</label>
+              <input type="text" igxInput [(ngModel)]="area.action.label" readonly />
+              <label igxLabel>label</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type !== 'uri'" igxFlex>
-              <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{area.action.text}}</label>
-              <label igxLabel class="igx-form-group__label">text</label>
+              <input type="text" igxInput [(ngModel)]="area.action.text" readonly />
+              <label igxLabel>text</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type === 'uri'" igxFlex>
-              <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{area.action.uri}}</label>
-              <label igxLabel class="igx-form-group__label">uri</label>
+              <input type="text" igxInput [(ngModel)]="area.action.uri" readonly />
+              <label igxLabel>uri</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
-              <label igxLabel class="igx-form-group__input igx-form-group__input--filled">{{area.action.data}}</label>
-              <label igxLabel class="igx-form-group__label">data</label>
+              <input type="text" igxInput [(ngModel)]="area.action.data" readonly />
+              <label igxLabel>data</label>
             </div>
           </div>
         </div>
       </igx-list-item>
     </igx-list>
   </div>
-
-  
 </div>
+
+<igx-dialog #settings title="User Id" leftButtonLabel="OK" (onLeftButtonSelect)="linkRichMenu()" rightButtonLabel="Cancel" (onRightButtonSelect)="settings.close()">
+    <div class="igx-form-group">
+        <input igxInput type="text" [(ngModel)]="userId" />
+        <label igxLabel>User Id</label>
+    </div>
+</igx-dialog>

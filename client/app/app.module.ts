@@ -12,12 +12,11 @@ import { HttpClient } from 'selenium-webdriver/http';
 
 import { IgxNavbarModule, IgxButtonModule, IgxIconModule, IgxLabelModule, 
   IgxRadioModule ,IgxCardModule, IgxLayout, IgxListModule, IgxDialogModule, 
-  IgxRippleModule } from 'igniteui-js-blocks/main';
+  IgxRippleModule, IgxInput } from 'igniteui-js-blocks/main';
 
 import { RichmenulistComponent } from './richmenulist/richmenulist.component';
 import { RichmenudetailComponent } from './richmenudetail/richmenudetail.component';
 import { RichmenueditorComponent } from './richmenueditor/richmenueditor.component';
-import { RichmenulinkComponent } from './richmenulink/richmenulink.component';
 
 import { LineService } from './line.service';
 import { MessageService } from './message.service';
@@ -29,8 +28,7 @@ import { AuthService } from './auth.service';
     AppComponent,
     RichmenulistComponent,
     RichmenudetailComponent,
-    RichmenueditorComponent,
-    RichmenulinkComponent
+    RichmenueditorComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +45,8 @@ import { AuthService } from './auth.service';
     IgxLayout,
     IgxListModule,
     IgxDialogModule,
-    IgxRippleModule
+    IgxRippleModule,
+    IgxInput
   ],
   providers: [
     LineService,

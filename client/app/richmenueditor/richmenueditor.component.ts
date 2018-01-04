@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { richMenu, bounds, action, area, size, postbackAction, messageAction, uriAction } from '../richMenu';
 import { LineService } from '../line.service';
 import { IgxDialog, IgxList } from 'igniteui-js-blocks/main';
@@ -8,7 +8,7 @@ import { IgxDialog, IgxList } from 'igniteui-js-blocks/main';
   templateUrl: './richmenueditor.component.html',
   styleUrls: ['./richmenueditor.component.css']
 })
-export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChecked {
+export class RichmenueditorComponent implements OnInit, OnChanges {
 
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('alert') alert: IgxDialog;
@@ -57,13 +57,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     this.newRect = true;
   }
 
-  ngAfterViewChecked() {
-    if (this.igxlist) {
-      this.igxlist.element.nativeElement.children[0].style.overflowY = "scroll";
-    }
-  }
-
-  private loadImage(input: HTMLInputElement) {
+  public loadImage(input: HTMLInputElement): void {
     if (!input.value) {
       return;
     }
@@ -91,7 +85,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     reader.readAsDataURL(input.files[0]);
   }
 
-  private checkImage() {
+  private checkImage(): void {
     if (this.img.nativeElement.src && this.img.nativeElement.naturalWidth === 2500 && (this.img.nativeElement.naturalHeight === 1686 || 843)) {
       this.richMenu.size.width = this.img.nativeElement.naturalWidth;
       this.richMenu.size.height = this.img.nativeElement.naturalHeight;
@@ -102,7 +96,6 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
       this.canvas.nativeElement.height = this.img.nativeElement.naturalHeight / this.scale;
       this.ctx = this.canvas.nativeElement.getContext('2d');
       this.rect = this.canvas.nativeElement.getBoundingClientRect();
-
     }
     else {
       this.img.nativeElement.src = "";
@@ -111,7 +104,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     }
   }
 
-  private addArea() {
+  public addArea(): void {
     if (this.bounds.width == null || 0) {
       this.alert.message = "Use mouse to specify area in the image first.";
       this.alert.open();
@@ -142,14 +135,14 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     this.richMenu.areas.push(newArea);
   }
 
-  private deleteArea(area: area) {
+  public deleteArea(area: area): void {
     let i = this.richMenu.areas.indexOf(area);
     this.richMenu.areas.splice(i, 1);
     this.ctx.clearRect(0, 0, this.rect.width, this.rect.height);
     this.drawAllRect();
   }
 
-  private createRichMenu() {
+  public createRichMenu(): void {
     if (!this.richMenu.name || /^\s*$/.test(this.richMenu.name)) {
       this.alert.message = "Name is mandatory";
       this.alert.open();
@@ -162,6 +155,11 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
       this.focusElement = this.chatBarTextInput;
       return;
     }
+    if (this.richMenu.areas.length === 0) {
+      this.alert.message = "Add at least one area.";
+      this.alert.open();
+      return;
+    }
     this.lineService.createRichMenu(this.richMenu)
       .subscribe(data => {
         this.lineService.uploadRichMenuImage(data, this.img.nativeElement.src, this.imageType)
@@ -171,22 +169,22 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
       });
   }
 
-  private cancel(): void {
+  public cancel(): void {
     this.emitClose.emit(true);
   }
 
-  private resetAndClose(): void {
+  public resetAndClose(): void {
     this.emitClose.emit(true);
   }
 
-  private closeAlert(): void {
+  public closeAlert(): void {
     this.alert.close();
     if (this.focusElement) {
       this.focusElement.nativeElement.focus();
     }
   }
 
-  private startDrawing(evt) {
+  private startDrawing(evt): void {
     if (this.img.nativeElement.src === "") {
       this.alert.message = "Select image first.";
       this.alert.open();
@@ -205,7 +203,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     }
   }
 
-  private keepDrawing(evt) {
+  private keepDrawing(evt): void {
     if (!this.drawing) {
       return;
     }
@@ -215,7 +213,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     this.drawAllRect();
   }
 
-  private stopDrawing(evt) {
+  private stopDrawing(evt): void {
     if (this.newRect) {
       return;
     }
@@ -242,7 +240,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges, AfterViewChec
     }
   }
 
-  private updateRect(): void {
+  public updateRect(): void {
     this.bounds.x = +this.bounds.x;
     this.bounds.y = +this.bounds.y;
     this.bounds.width = +this.bounds.width;

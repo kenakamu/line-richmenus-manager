@@ -1,9 +1,16 @@
 .item {
-    height: 30px;
+    height: 38px;
+}
+
+canvas {
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-width: 4px;
+    border-style: solid;
 }
 
 .areas {
-    height: calc(100vh - 180px);
+    height: calc(100vh - 80px);
 }
 
 .index{
@@ -14,4 +21,22 @@
 .type{
     width: 80px;
     flex: none !important;
+}
+
+igx-list >>> .igx-list{
+    background: rgb(52,57,62) !important;
+    overflow-y: scroll !important;
+}
+
+igx-list-item >>> div{
+    background: rgb(52,57,62) !important;
+    color:white !important;
+}
+
+igx-list-item >>> label{
+    color:white !important;
+}
+
+.igx-form-group >>> label{
+    color:white !important;
 }

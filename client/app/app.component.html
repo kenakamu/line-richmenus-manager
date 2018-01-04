@@ -1,36 +1,21 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <igx-navbar title="LINE Rich Menu Manager">
-    <button igxButton="icon" (click)="loadRichMenu()">
-        <igx-icon name="refresh"></igx-icon>
-    </button>
-    <button igxButton="icon" (click)="newRichMenu()">
-        <igx-icon name="add"></igx-icon>
-    </button>
-    <button igxButton="icon" (click)="openSettings()">
-        <igx-icon name="settings"></igx-icon>
-    </button>
+    <igx-icon name="add" (click)="newRichMenu()"></igx-icon>
+    <igx-icon name="refresh" (click)="loadRichMenu(null)"></igx-icon>
+    <igx-icon name="search" (click)="input.style.display='block'"></igx-icon>
+    <input #input type="text" [(ngModel)]="userId" placeholder="Enter UserId and press 'Enter' key" (keydown)="searchRichMenuForUserId($event)">    
+    <igx-icon name="settings" (click)="openSettings()"></igx-icon>
 </igx-navbar>
 
 <app-richmenulist class="col-md-2" [displayNew]="displayNew" (emitSelectedRichmenu)="emitSelectedRichmenu($event)" (emitAuthenticationError)="emitAuthenticationError($event)">
 </app-richmenulist>
-
-<app-richmenudetail class="col-md-10" [richMenu]="selectedRichMenu" [displayDetail]="!displayNew" (emitClose)="loadRichMenu()"></app-richmenudetail>
-
-<app-richmenueditor class="col-md-12" [displayNew]="displayNew" (emitClose)="loadRichMenu()"></app-richmenueditor>
-<!-- <div class="col-md-12">
-    <app-richmenulink></app-richmenulink>
-</div> -->
+<app-richmenudetail class="col-md-10" [richMenu]="selectedRichMenu" [displayDetail]="displayDetail" (emitClose)="loadRichMenu(null)"></app-richmenudetail>
+<app-richmenueditor class="col-md-12" [displayNew]="displayNew" (emitClose)="loadRichMenu(null)"></app-richmenueditor>
 
 <igx-dialog #settings title="SignIn" leftButtonLabel="OK" (onLeftButtonSelect)="closeSettings()">
     <div class="igx-form-group">
-        <input igxInput type="password" [(ngModel)]="token" required class="ng-untouched igx-form-group__input igx-form-group__input--filled"
-        />
-        <label igxLabel class="igx-form-group__label">Channel Access Token</label>
-    </div>
-    <div class="igx-form-group">
-        <input igxInput type="text" [(ngModel)]="userId" class="ng-untouched igx-form-group__input igx-form-group__input--filled"
-        />
-        <label igxLabel class="igx-form-group__label">User Id</label>
+        <input igxInput type="password" [(ngModel)]="token" required />
+        <label igxLabel>Channel Access Token</label>
     </div>
 </igx-dialog>
 

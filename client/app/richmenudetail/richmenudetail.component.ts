@@ -1,9 +1,9 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewChecked} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { richMenu, bounds } from '../richMenu';
 import { LineService } from '../line.service';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser'
 import { SafeUrl } from '@angular/platform-browser/src/security/dom_sanitization_service';
-import { IgxList } from 'igniteui-js-blocks/main';
+import { IgxList, IgxLabel, IgxDialog } from 'igniteui-js-blocks/main';
 
 @Component({
   selector: 'app-richmenudetail',
@@ -17,7 +17,7 @@ export class RichmenudetailComponent implements OnInit, OnChanges, AfterViewChec
   @Output() emitClose = new EventEmitter();
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('img') img: ElementRef;
-  @ViewChild('igxlist') igxlist: IgxList;
+  @ViewChild('settings') settings: IgxDialog;
 
   constructor(
     private lineService: LineService,
@@ -27,32 +27,30 @@ export class RichmenudetailComponent implements OnInit, OnChanges, AfterViewChec
   ctx: CanvasRenderingContext2D;
   rect: ClientRect;
   scale: number = 6;
+  userId: string = "";
+  link: boolean = false;
 
   ngOnInit() {
   }
 
   ngOnChanges() {
-    if(!this.img){
+    if (!this.img) {
       return;
     }
     this.getImage();
   }
 
-  ngAfterViewChecked(): void{
+  ngAfterViewChecked() {
     this.getImage();
-    if (this.igxlist) {
-      this.igxlist.element.nativeElement.children[0].style.overflowY = "scroll";
-    }
   }
 
-  getImage(): void {
+  public getImage(): void {
     if (this.richMenu && this.richMenu.image != null) {
       this.img.nativeElement.src = this.richMenu.image;
     }
   }
 
-  
-  checkImage() {
+  public checkImage(): void {
     this.canvas.nativeElement.style.backgroundImage = `url('${this.richMenu.image}')`;
     this.canvas.nativeElement.width = this.img.nativeElement.naturalWidth / this.scale;
     this.canvas.nativeElement.height = this.img.nativeElement.naturalHeight / this.scale;
@@ -65,26 +63,55 @@ export class RichmenudetailComponent implements OnInit, OnChanges, AfterViewChec
     this.drawAllRect();
   }
 
-  drawAllRect(): void {
+  public drawAllRect(): void {
     for (let i: number = 0; i < this.richMenu.areas.length; i++) {
       let area = this.richMenu.areas[i];
       this.fillAndStrokeText((i + 1).toString(), area.bounds);
     }
   }
 
-  fillAndStrokeText(count: string, bounds: bounds): void {
+  private fillAndStrokeText(count: string, bounds: bounds): void {
     this.ctx.fillRect(bounds.x / this.scale, bounds.y / this.scale, bounds.width / this.scale, bounds.height / this.scale);
     this.ctx.strokeText(count,
       bounds.x / this.scale + bounds.width / this.scale / 2,
       bounds.y / this.scale + bounds.height / this.scale / 2);
   }
 
-  delete() {
+  public delete(): void {
     this.lineService.deleteRichMenu(this.richMenu.richMenuId).subscribe(
       () => {
         this.richMenu = null;
         this.emitClose.emit();
       }
     );
+  }
+
+  public linkToUser(): void {
+    this.link = true;
+    this.userId = localStorage.getItem('userId');
+    this.settings.open();
+  }
+
+  public unlinkToUser(): void {
+    this.link = false;
+    this.userId = localStorage.getItem('userId');
+    this.settings.open();
+  }
+
+  public linkRichMenu(): void {
+    if (!this.userId || this.userId === "") {
+      return;
+    }
+    localStorage.setItem('userId', this.userId);
+    if (this.link) {
+      this.lineService.linkRichMenuToUser(this.userId, this.richMenu.richMenuId).subscribe(() => {
+        this.settings.close();
+      });
+    }
+    else {
+      this.lineService.unlinkRichMenuToUser(this.userId).subscribe(() => {
+        this.settings.close();
+      });
+    }
   }
 }

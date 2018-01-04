@@ -1,0 +1,13 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+/client
+/e2e
+/node_modules
+.angular-cli.json
+.editorconfig
+.gitignore
+/.git
+karma.conf.js
+protractor.conf.js
+tsconfig.json
+tslint.json

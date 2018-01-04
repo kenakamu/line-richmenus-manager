@@ -1,27 +1,67 @@
-# LineRichMenusManager
+# LINE Rich Menus Manager
+日本語は[こちら](./README_ja.md)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
+This is a tool to manager Rich Menus for your LINE bot. See [here](https://developers.line.me/en/docs/messaging-api/using-rich-menus/) for more detail about Rich Menu.
 
-## Development server
+# Install from npm
+If you just want to use it, install and run from npm.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
+npm install -g line-richmenus-manager
+line-richmenus-manager
+```
+or for macOS, 
+```
+sudo npm install -g line-richmenus-manager
+sudo line-richmenus-manager
+```
+It will open a browser and start the service on port 3000. I recommend using Chrome as browser.
+When you stop it, Ctrl+C from the terminal.
+You can also pass port parameter to specify port to run the app.
+```
+line-richmenus-manager --port:3200
+```
+# How to use the application.
+It's simple enough to figure out. Please try and let me know if you stuck somewhere.
 
-## Code scaffolding
+# Features
+At the moment, the applicaiton let you:
+- List Rich Menus for your bot.
+- Find a Rich Menu for a user.
+- See the Rich Menu detail, link or unlink it from a user.
+- Create new Rich Menu.
+- Delete the Rich Menu.
+You can use mouse to draw the area for action in the image you specify, or/and use text box to specify x/y/width/hight for pixel level modificaiton.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# Get it from GitHub
+## Prerequisits
+- LINE developer account
+- node.js
+- And of course your LINE bot app :)
+- Visual Studio Code
+- Debugger for Chrome extension
+- **This app is only tested in Chrome**
 
-## Build
+## Setup
+Use following commands to clone and install module.
+```
+git clone https://github.com/kenakamu/line-richmenus-manager
+npm install
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+## Start debugging
+This application consists of express server and Angular 2 application. To debug this, do the following.
 
-## Running unit tests
+1. Open Integarated Console and run the following command. It runs Angular 2 application and use proxy.js to talk with server (express in this case.)
+```
+ng serve --aot --progress=false --proxy-config proxy.conf.json
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. If you want to debug express server, then select Debug menu in VSCode, then select "Launch Node". Press F5, which will run the node app in debug mode.
 
-## Running end-to-end tests
+3. To debug browser, select "Launch Chrome" and Press F5.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Special Thanks
+Azuma Ken
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+This application uses [Ignite UI for Angular](https://www.infragistics.com/products/ignite-ui-angular) by INFRAGISTICS as UI component.

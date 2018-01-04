@@ -11,3 +11,4 @@ karma.conf.js
 protractor.conf.js
 tsconfig.json
 tslint.json
+/dist/out-tsc

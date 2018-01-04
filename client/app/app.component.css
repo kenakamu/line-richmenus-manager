@@ -5,3 +5,7 @@ igx-navbar input {
     padding-left: 10px;
     color: black !important;
 }
+
+igx-dialog input {
+    color: black !important;
+}

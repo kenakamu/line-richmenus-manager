@@ -3,6 +3,7 @@
 /client
 /e2e
 /node_modules
+/.vscode
 .angular-cli.json
 .editorconfig
 .gitignore

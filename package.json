@@ -1,6 +1,6 @@
 {
  "name": "line-richmenus-manager",
- "version": "0.0.4",
+ "version": "0.0.5",
  "displayName": "LINE Rich Menus Manager",
  "description": "LINE Rich Menus Manager",
  "publisher": "kenakamu",
@@ -73,10 +73,10 @@
   "line-richmenus-manager": "run.js"
  },
  "repository": {
-  "url": "https://github.com/kenakamu/LINESimulator"
+  "url": "https://github.com/kenakamu/line-richmenus-manager"
  },
  "bugs": {
-  "url": "https://github.com/kenakamu/LINESimulator/issues"
+  "url": "https://github.com/kenakamu/line-richmenus-manager/issues"
  },
  "license": "MIT"
 }

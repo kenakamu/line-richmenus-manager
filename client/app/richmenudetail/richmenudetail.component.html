@@ -1,4 +1,4 @@
-<div *ngIf="richMenu && displayDetail">
+<div *ngIf="richMenu!=null">
   <div class="col-md-5">
     <div class="igx-form-group">
       <input type="text" igxInput [(ngModel)]="richMenu.richMenuId" readonly />
@@ -12,8 +12,10 @@
       <input type="text" igxInput [(ngModel)]="richMenu.chatBarText" readonly />
       <label igxLabel>Chat Bar Text</label>
     </div>
-    <canvas #canvas width="500px" height="0px"></canvas>
-    <img style="display:none" #img (load)="checkImage()">
+    <div #imgdiv style="width:100%">
+      <canvas #canvas width="500px" height="0px"></canvas>
+      <img style="display:none" #img (load)="checkImage()">
+    </div>
     <div>
       <button igxButton="raised" (click)="delete()">Delete Rich Menu</button>
       <button igxButton="raised" (click)="linkToUser()">Link to User</button>
@@ -56,9 +58,10 @@
   </div>
 </div>
 
-<igx-dialog #settings title="User Id" leftButtonLabel="OK" (onLeftButtonSelect)="linkRichMenu()" rightButtonLabel="Cancel" (onRightButtonSelect)="settings.close()">
-    <div class="igx-form-group">
-        <input igxInput type="text" [(ngModel)]="userId" />
-        <label igxLabel>User Id</label>
-    </div>
+<igx-dialog #settings title="User Id" leftButtonLabel="OK" (onLeftButtonSelect)="linkRichMenu()" rightButtonLabel="Cancel"
+  (onRightButtonSelect)="settings.close()">
+  <div class="igx-form-group">
+    <input igxInput type="text" [(ngModel)]="userId" />
+    <label igxLabel>User Id</label>
+  </div>
 </igx-dialog>

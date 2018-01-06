@@ -12,9 +12,10 @@ import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 })
 export class RichmenulistComponent implements OnInit {
 
-  @Input() displayNew: boolean;
-  @Output() emitSelectedRichmenu = new EventEmitter();
+  @Input() selectedRichMenu: richMenu;
+  @Output() selectedRichMenuChange: EventEmitter<richMenu> = new EventEmitter();
   @Output() emitAuthenticationError = new EventEmitter();
+  @Input() displayList: boolean;
 
   constructor(
     private lineService: LineService,
@@ -87,12 +88,6 @@ export class RichmenulistComponent implements OnInit {
   }
 
   public onSelect(richMenu: richMenu): void {
-    this.emitSelectedRichmenu.emit(richMenu);
-  }
-
-  public delete(richMenu: richMenu): void {
-    this.lineService.deleteRichMenu(richMenu.richMenuId).subscribe(
-      () => { this.load(null); }
-    );
+    this.selectedRichMenuChange.emit(richMenu);
   }
 }

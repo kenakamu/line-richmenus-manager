@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
+import { Component, ViewChild, OnInit, OnChanges, ElementRef } from '@angular/core';
 import { richMenu } from './richMenu';
 import { IgxDialog } from 'igniteui-js-blocks/main';
 import { RichmenulistComponent } from './richmenulist/richmenulist.component';
@@ -10,7 +10,7 @@ import { RichmenudetailComponent } from './richmenudetail/richmenudetail.compone
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnChanges {
 
   @ViewChild('settings') settings: IgxDialog;
   @ViewChild('alert') alert: IgxDialog;
@@ -19,16 +19,12 @@ export class AppComponent implements OnInit {
 
   title = 'LINE RichMenu Manager';
 
-  selectedRichMenu: richMenu;
+  selectedRichMenu: richMenu = null;
+  displayList: boolean = true;
   displayNew: boolean = false;
   displayDetail: boolean = false;
-  userId: string;
-  token: string;
-
-  constructor() {
-    this.userId = localStorage.getItem('userId');
-    this.token = localStorage.getItem('token');
-  }
+  userId: string = localStorage.getItem('userId');
+  token: string = localStorage.getItem('token');
 
   ngOnInit() {
     if (localStorage.getItem('token')) {
@@ -39,6 +35,10 @@ export class AppComponent implements OnInit {
     }
   }
 
+  ngOnChanges(){
+    let a= "a";
+  }
+
   public closeSettings(): void {
     if (this.token) {
       localStorage.setItem('token', this.token);
@@ -47,13 +47,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public emitSelectedRichmenu(richMenu: richMenu): void {
-    this.displayDetail = true;
-    this.selectedRichMenu = richMenu;
-  }
-
   public emitNew(e): void {
     this.displayNew = true;
+    this.displayList = false;
   }
 
   public emitAuthenticationError(e): void {
@@ -74,6 +70,7 @@ export class AppComponent implements OnInit {
 
   public loadRichMenu(userId: string): void {
     this.displayNew = this.displayDetail = false;
+    this.displayList = true;
     this.richmenulistComponent.load(userId);
   }
 
@@ -83,6 +80,7 @@ export class AppComponent implements OnInit {
 
   public newRichMenu(): void {
     this.displayDetail = false;
+    this.displayList = false;
     this.displayNew = true;
   }
 }

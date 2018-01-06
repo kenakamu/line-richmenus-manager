@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { richMenu, bounds } from '../richMenu';
 import { LineService } from '../line.service';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser'
@@ -10,13 +10,13 @@ import { IgxList, IgxLabel, IgxDialog } from 'igniteui-js-blocks/main';
   templateUrl: './richmenudetail.component.html',
   styleUrls: ['./richmenudetail.component.css']
 })
-export class RichmenudetailComponent implements OnInit, OnChanges, AfterViewChecked {
+export class RichmenudetailComponent implements OnInit, AfterViewChecked {
 
   @Input() richMenu: richMenu;
-  @Input() displayDetail: boolean;
-  @Output() emitClose = new EventEmitter();
+  @Output() richMenuDeleted: EventEmitter<boolean> = new EventEmitter();
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('img') img: ElementRef;
+  @ViewChild('imgdiv') imgdiv: ElementRef;
   @ViewChild('settings') settings: IgxDialog;
 
   constructor(
@@ -26,31 +26,21 @@ export class RichmenudetailComponent implements OnInit, OnChanges, AfterViewChec
 
   ctx: CanvasRenderingContext2D;
   rect: ClientRect;
-  scale: number = 6;
+  scale: number;
   userId: string = "";
   link: boolean = false;
 
   ngOnInit() {
   }
 
-  ngOnChanges() {
-    if (!this.img) {
-      return;
-    }
-    this.getImage();
-  }
-
   ngAfterViewChecked() {
-    this.getImage();
-  }
-
-  public getImage(): void {
     if (this.richMenu && this.richMenu.image != null) {
       this.img.nativeElement.src = this.richMenu.image;
     }
   }
 
   public checkImage(): void {
+    this.scale = this.img.nativeElement.naturalWidth / this.imgdiv.nativeElement.clientWidth;
     this.canvas.nativeElement.style.backgroundImage = `url('${this.richMenu.image}')`;
     this.canvas.nativeElement.width = this.img.nativeElement.naturalWidth / this.scale;
     this.canvas.nativeElement.height = this.img.nativeElement.naturalHeight / this.scale;
@@ -81,7 +71,7 @@ export class RichmenudetailComponent implements OnInit, OnChanges, AfterViewChec
     this.lineService.deleteRichMenu(this.richMenu.richMenuId).subscribe(
       () => {
         this.richMenu = null;
-        this.emitClose.emit();
+        this.richMenuDeleted.emit(true);
       }
     );
   }

@@ -62,7 +62,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges {
       return;
     }
     let fileExt = input.value.split('.')[1].toLowerCase();
-    if (fileExt !== ('png' || 'jpg' || 'jpeg')) {
+    if (fileExt !== 'png' && fileExt !== 'jpg' && fileExt !=='jpeg') {
       input.value = "";
       this.alert.message = "Only png or jpeg are supported.";
       this.alert.open();
@@ -86,7 +86,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges {
   }
 
   private checkImage(): void {
-    if (this.img.nativeElement.src && this.img.nativeElement.naturalWidth === 2500 && (this.img.nativeElement.naturalHeight === 1686 || 843)) {
+    if (this.img.nativeElement.src && this.img.nativeElement.naturalWidth === 2500 && (this.img.nativeElement.naturalHeight === 1686 || this.img.nativeElement.naturalHeight === 843)) {
       this.richMenu.size.width = this.img.nativeElement.naturalWidth;
       this.richMenu.size.height = this.img.nativeElement.naturalHeight;
       this.scale = this.img.nativeElement.naturalWidth / this.imgdiv.nativeElement.clientWidth;
@@ -105,7 +105,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges {
   }
 
   public addArea(): void {
-    if (this.bounds.width == null || 0) {
+    if (this.bounds.width == null || this.bounds.width == 0) {
       this.alert.message = "Use mouse to specify area in the image first.";
       this.alert.open();
       return;

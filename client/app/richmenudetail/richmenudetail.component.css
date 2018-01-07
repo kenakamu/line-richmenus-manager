@@ -40,3 +40,7 @@ igx-list-item >>> label{
 .igx-form-group >>> label{
     color:white !important;
 }
+
+igx-dialog input {
+    color: black !important;
+}

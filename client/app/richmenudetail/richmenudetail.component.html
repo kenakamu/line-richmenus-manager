@@ -39,13 +39,23 @@
               <input type="text" igxInput [(ngModel)]="area.action.label" readonly />
               <label igxLabel>label</label>
             </div>
-            <div class="igx-form-group" *ngIf="area.action.type !== 'uri'" igxFlex>
+            <div class="igx-form-group" *ngIf="area.action.type === 'message'" igxFlex>
               <input type="text" igxInput [(ngModel)]="area.action.text" readonly />
               <label igxLabel>text</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type === 'uri'" igxFlex>
               <input type="text" igxInput [(ngModel)]="area.action.uri" readonly />
               <label igxLabel>uri</label>
+            </div>
+            <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
+              <input type="text" *ngIf="area.action.displayText == null" igxInput value=" " readonly />
+              <input type="text" *ngIf="area.action.displayText != null" igxInput [(ngModel)]="area.action.displayText" readonly />
+              <label igxLabel>displayText</label>
+            </div>
+            <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
+              <input type="text" *ngIf="area.action.text == null" igxInput value=" " readonly/>
+              <input type="text" *ngIf="area.action.text != null" igxInput [(ngModel)]="area.action.text" readonly />
+              <label igxLabel>text</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
               <input type="text" igxInput [(ngModel)]="area.action.data" readonly />

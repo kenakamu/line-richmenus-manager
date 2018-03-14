@@ -35,7 +35,6 @@ export class RichmenulistComponent implements OnInit {
         data => {
           if (data) {
             this.lineService.getRichMenu(data).subscribe(
-
               data => {
                 this.loadImages(new Array<richMenu>(data));
               }

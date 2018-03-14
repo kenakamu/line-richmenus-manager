@@ -29,6 +29,7 @@ export class RichmenueditorComponent implements OnInit, OnChanges {
   actionType: string;
   label: string;
   text: string;
+  displayText: string;
   data: string;
   uri: string;
   imageType: string;
@@ -124,7 +125,12 @@ export class RichmenueditorComponent implements OnInit, OnChanges {
     let newArea = new area();
     Object.assign(newArea.bounds = new bounds(), this.bounds);
     if (this.actionType === "postback") {
-      newArea.action = new postbackAction(this.label, this.data, this.text);
+      if(this.text !== null && this.text !== ""){
+        newArea.action = new postbackAction(this.label, this.data, this.text, false);
+      }
+      else{
+        newArea.action = new postbackAction(this.label, this.data, this.displayText, true);        
+      }
     }
     else if (this.actionType === "message") {
       newArea.action = new messageAction(this.label, this.text);

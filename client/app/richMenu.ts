@@ -42,12 +42,20 @@ export abstract class action {
 
 export class postbackAction extends action {
     data: string;
-    text: string;
-    constructor(label: string, data: string, text: string) {
+    displayText: string;
+    text: string; // depricated
+    constructor(label: string, data: string, text: string, useDisplayText: boolean) {
         super(label);
         this.type = "postback";
         this.data = data;
-        this.text = text;
+        if(useDisplayText){
+            this.displayText = text;
+            this.text = null;
+        }
+        else{
+            this.text = text;
+            this.displayText = null;
+        }
     }
 }
 

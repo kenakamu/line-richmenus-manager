@@ -10,8 +10,6 @@ import { Readable } from "stream";
 @Injectable()
 export class LineService {
 
-  private lineApiUrl = '';  // URL to web api
-
   constructor(
     private http: HttpClient,
     private messageService: MessageService

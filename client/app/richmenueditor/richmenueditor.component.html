@@ -42,18 +42,19 @@
       </div>
     </div>
     <!-- action -->
+    <label *ngIf="actionType === 'postback'" igxLabel>You can specify either displayText or text. text is depricated.</label>
+
     <div class="igx-form-group">
       <select class="form-control" [(ngModel)]="actionType" igxInput required>
         <option *ngFor="let actionType of actionTypes" [selected]="actionType === actionType">{{actionType}}</option>
       </select>
       <label igxLabel>type</label>
-
     </div>
     <div class="igx-form-group">
       <input [(ngModel)]="label" igxInput type="text" required />
       <label igxLabel>label</label>
     </div>
-    <div class="igx-form-group" *ngIf="actionType !== 'uri'">
+    <div class="igx-form-group" *ngIf="actionType === 'message'">
       <input [(ngModel)]="text" igxInput type="text" required />
       <label igxLabel>text</label>
     </div>
@@ -62,7 +63,15 @@
       <label igxLabel>uri</label>
     </div>
     <div class="igx-form-group" *ngIf="actionType === 'postback'">
-      <input [(ngModel)]="data" igxInput type="text" required />
+      <input [(ngModel)]="displayText" igxInput type="text" required [disabled]="text !== ''"/>
+      <label igxLabel>displayText</label>
+    </div>
+    <div class="igx-form-group" *ngIf="actionType === 'postback'" igxFlex>
+      <input [(ngModel)]="text" igxInput type="text" [disabled]="displayText !== ''"/>
+      <label igxLabel>text (Depricated)</label>
+    </div>
+    <div class="igx-form-group" *ngIf="actionType === 'postback'">
+      <input [(ngModel)]="data" igxInput type="text" />
       <label igxLabel>data</label>
     </div>
     <!-- operations -->
@@ -94,13 +103,21 @@
               <input #labelInput [(ngModel)]="area.action.label" igxInput type="text" required />
               <label igxLabel>label</label>
             </div>
-            <div class="igx-form-group" *ngIf="area.action.type !== 'uri'" igxFlex>
+            <div class="igx-form-group" *ngIf="area.action.type === 'message'" igxFlex>
               <input [(ngModel)]="area.action.text" igxInput type="text" required />
               <label igxLabel>text</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type === 'uri'" igxFlex>
               <input [(ngModel)]="area.action.uri" igxInput type="text" required />
               <label igxLabel>uri</label>
+            </div>
+            <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
+              <input [(ngModel)]="area.action.displayText" igxInput type="text" />
+              <label igxLabel>displayText</label>
+            </div>
+            <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
+              <input [(ngModel)]="area.action.text" igxInput type="text" />
+              <label igxLabel>text (Depricated)</label>
             </div>
             <div class="igx-form-group" *ngIf="area.action.type === 'postback'" igxFlex>
               <input [(ngModel)]="area.action.data" igxInput type="text" required />

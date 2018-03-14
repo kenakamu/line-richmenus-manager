@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnChanges, ElementRef } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { richMenu } from './richMenu';
 import { IgxDialog } from 'igniteui-js-blocks/main';
 import { RichmenulistComponent } from './richmenulist/richmenulist.component';
@@ -10,7 +10,7 @@ import { RichmenudetailComponent } from './richmenudetail/richmenudetail.compone
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit, OnChanges {
+export class AppComponent implements OnInit {
 
   @ViewChild('settings') settings: IgxDialog;
   @ViewChild('alert') alert: IgxDialog;
@@ -22,7 +22,6 @@ export class AppComponent implements OnInit, OnChanges {
   selectedRichMenu: richMenu = null;
   displayList: boolean = true;
   displayNew: boolean = false;
-  displayDetail: boolean = false;
   userId: string = localStorage.getItem('userId');
   token: string = localStorage.getItem('token');
 
@@ -33,10 +32,6 @@ export class AppComponent implements OnInit, OnChanges {
     else {
       this.settings.open();
     }
-  }
-
-  ngOnChanges(){
-    let a= "a";
   }
 
   public closeSettings(): void {
@@ -69,8 +64,9 @@ export class AppComponent implements OnInit, OnChanges {
   }
 
   public loadRichMenu(userId: string): void {
-    this.displayNew = this.displayDetail = false;
+    this.displayNew  = false;
     this.displayList = true;
+    this.selectedRichMenu = null;
     this.richmenulistComponent.load(userId);
   }
 
@@ -79,7 +75,7 @@ export class AppComponent implements OnInit, OnChanges {
   }
 
   public newRichMenu(): void {
-    this.displayDetail = false;
+    this.selectedRichMenu = null;
     this.displayList = false;
     this.displayNew = true;
   }

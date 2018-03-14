@@ -18,7 +18,7 @@ export class RichmenudetailComponent implements OnInit, AfterViewChecked {
   @ViewChild('img') img: ElementRef;
   @ViewChild('imgdiv') imgdiv: ElementRef;
   @ViewChild('settings') settings: IgxDialog;
-
+  
   constructor(
     private lineService: LineService,
     private sanitizer: DomSanitizer

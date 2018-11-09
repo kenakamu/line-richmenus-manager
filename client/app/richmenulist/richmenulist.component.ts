@@ -61,10 +61,11 @@ export class RichmenulistComponent implements OnInit {
       return;
     }
     this.richMenus = richMenus;
+    this.getDefaultRichMenu();
     for (var i = 0; i < this.richMenus.length; i++) {
       this.lineService.downloadRichMenuImage(this.richMenus[i].richMenuId).subscribe(
         data => {
-          this.setImage(data);
+          this.setImage(data);         
         }
       );
     }
@@ -86,7 +87,23 @@ export class RichmenulistComponent implements OnInit {
     }
   }
 
+  private getDefaultRichMenu(): void {
+    this.lineService.getDefaultRichMenuId().subscribe(
+      data => {
+        this.richMenus.find(x => x.richMenuId === data).name += " DEFAULT";
+      }
+    );      
+  }
+
   public onSelect(richMenu: richMenu): void {
     this.selectedRichMenuChange.emit(richMenu);
+  }
+
+  private resetDefaultRichMenu(): void {
+    this.lineService.cancelDefaultRichMenu().subscribe(
+      data => {
+        this.load(null);
+      }
+    );      
   }
 }

@@ -20,6 +20,7 @@
       <button igxButton="raised" (click)="delete()">Delete Rich Menu</button>
       <button igxButton="raised" (click)="linkToUser()">Link to User</button>
       <button igxButton="raised" (click)="unlinkToUser()">Unlink from User</button>
+      <button igxButton="raised" (click)="setDefault()">Set as default</button>
     </div>
   </div>
   <div class="col-md-7 areas">
@@ -74,4 +75,8 @@
     <input igxInput type="text" [(ngModel)]="userId" />
     <label igxLabel>User Id</label>
   </div>
+</igx-dialog>
+
+<igx-dialog #info title="Info" leftButtonLabel="OK" (onLeftButtonSelect)="info.close()" message="Complete!">
+  
 </igx-dialog>

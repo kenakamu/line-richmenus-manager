@@ -1,5 +1,6 @@
 <div *ngIf="displayList" class="richMenuList">
   <h5>Total: {{richMenus.length}} menus</h5>
+  <button igxButton="raised" (click)="resetDefaultRichMenu()">Reset Default Menu</button>
   <div *ngFor="let richMenu of richMenus" (click)="onSelect(richMenu)">
     <h6>{{richMenu.name}}</h6>
     <img width="95%" [src]="getImage(richMenu)">

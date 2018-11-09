@@ -118,6 +118,34 @@ export class LineService {
   }
 
   /**
+   * Set default rich menu https://developers.line.me/en/reference/messaging-api/#set-default-rich-menu
+   */
+  setDefaultRichMenu(richMenuId: string): Observable<any> {
+    return this.http.post<any>(`user/all/richmenu/${richMenuId}`, null ).pipe(
+      catchError(this.handleError(`fail to set default ${richMenuId}`))
+    );
+  }
+
+  /**
+   * Cancel default rich menu https://developers.line.me/en/reference/messaging-api/#cancel-default-rich-menu
+   */
+  cancelDefaultRichMenu(): Observable<any> {
+    return this.http.delete<any>(`user/all/richmenu`).pipe(
+      catchError(this.handleError(`fail to cancel default richmenu`))
+    );
+  }
+  
+  /**
+   * Get default rich menu ID https://developers.line.me/en/reference/messaging-api/#get-default-rich-menu-id
+   */
+  getDefaultRichMenuId(): Observable<string> {
+    return this.http.get<string>(`user/all/richmenu`).pipe(
+      map(data => data['richMenuId']),
+      catchError(this.handleError<string>(`get richMenu for all user`))
+    )
+  }
+
+  /**
    * Handle Http operation that failed.
    * Let the app continue.
    * @param operation - name of the operation that failed

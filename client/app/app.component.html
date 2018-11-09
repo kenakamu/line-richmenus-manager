@@ -9,7 +9,7 @@
 
 <app-richmenulist class="col-md-2" [displayList]="displayList" [(selectedRichMenu)]="selectedRichMenu" (emitAuthenticationError)="emitAuthenticationError($event)">
 </app-richmenulist>
-<app-richmenudetail class="col-md-10" [richMenu]="selectedRichMenu" (richMenuDeleted)="loadRichMenu(null)"></app-richmenudetail>
+<app-richmenudetail class="col-md-10" [richMenu]="selectedRichMenu" (richMenuDeleted)="loadRichMenu(null)" (richMenuDefaultSet)="loadRichMenu(null)"></app-richmenudetail>
 <app-richmenueditor class="col-md-12" [displayNew]="displayNew" (emitClose)="loadRichMenu(null)"></app-richmenueditor>
 
 <igx-dialog #settings title="SignIn" leftButtonLabel="OK" (onLeftButtonSelect)="closeSettings()">

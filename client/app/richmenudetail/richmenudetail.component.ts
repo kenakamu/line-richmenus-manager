@@ -14,10 +14,12 @@ export class RichmenudetailComponent implements OnInit, AfterViewChecked {
 
   @Input() richMenu: richMenu;
   @Output() richMenuDeleted: EventEmitter<boolean> = new EventEmitter();
+  @Output() richMenuDefaultSet: EventEmitter<boolean> = new EventEmitter();
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('img') img: ElementRef;
   @ViewChild('imgdiv') imgdiv: ElementRef;
   @ViewChild('settings') settings: IgxDialog;
+  @ViewChild('info') info: IgxDialog;
   
   constructor(
     private lineService: LineService,
@@ -103,5 +105,12 @@ export class RichmenudetailComponent implements OnInit, AfterViewChecked {
         this.settings.close();
       });
     }
+  }
+
+  public setDefault(): void {
+    this.lineService.setDefaultRichMenu(this.richMenu.richMenuId).subscribe(() => {
+      this.info.open();
+      this.richMenuDefaultSet.emit(true);
+    });
   }
 }
